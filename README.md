@@ -1,73 +1,292 @@
-# Welcome to your Lovable project
+# 🚀 Solana Spinner Bot
 
-## Project info
+Bot avançado para trading automatizado de tokens recém-listados no PumpFun na rede Solana. O sistema gera uma carteira única para cada usuário, aplica uma taxa de 10% em saques e oferece configurações avançadas de trading.
 
-**URL**: https://lovable.dev/projects/46a44d9f-dbe5-4336-97b1-220b25bcf9f5
+## ✨ Características Principais
 
-## How can I edit this code?
+- 🎯 **Trading Automatizado**: Bot inteligente que opera tokens do PumpFun
+- 💳 **Carteira Única**: Cada usuário recebe uma carteira Solana exclusiva
+- 💰 **Sistema de Taxas**: Taxa de 10% em saques para carteira administrativa
+- 📊 **Análise Inteligente**: Algoritmos avançados para detecção de oportunidades
+- 🔒 **Segurança**: Chaves privadas criptografadas e JWT para autenticação
+- 📈 **Dashboard Completo**: Interface moderna com estatísticas em tempo real
 
-There are several ways of editing your application.
+## 🛠️ Tecnologias Utilizadas
 
-**Use Lovable**
+### Frontend
+- **React 18** com TypeScript
+- **Vite** para build e desenvolvimento
+- **Tailwind CSS** para estilização
+- **shadcn/ui** para componentes
+- **React Query** para gerenciamento de estado
+- **React Router** para navegação
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/46a44d9f-dbe5-4336-97b1-220b25bcf9f5) and start prompting.
+### Backend
+- **Node.js** com Express e TypeScript
+- **MongoDB** com Mongoose para banco de dados
+- **@solana/web3.js** para integração Solana
+- **JWT** para autenticação
+- **bcryptjs** para hash de senhas
+- **Axios** para API calls
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🚀 Instalação e Configuração
 
-**Use your preferred IDE**
+### Pré-requisitos
+- Node.js 18+ 
+- MongoDB
+- Git
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 1. Clone o repositório
+```bash
+git clone <repo-url>
+cd solana-spinner-bot
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 2. Instale as dependências
+```bash
+# Dependências do frontend
+npm install
 
-Follow these steps:
+# Dependências do servidor
+cd server
+npm install
+cd ..
+```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 3. Configure as variáveis de ambiente
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Crie um arquivo `.env` na pasta `server/` com:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```env
+# Solana Configuration
+SOLANA_NETWORK=devnet
+SOLANA_RPC_URL=https://api.devnet.solana.com
+PUMPFUN_API_URL=https://frontend-api.pump.fun
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Database Configuration
+MONGODB_URI=mongodb://localhost:27017/solana-spinner-bot
+DB_NAME=solana_spinner_bot
+
+# Security
+JWT_SECRET=seu-jwt-secret-super-seguro
+BCRYPT_SALT_ROUNDS=12
+
+# Server Configuration
+PORT=3001
+NODE_ENV=development
+
+# Bot Configuration
+ADMIN_WALLET_ADDRESS=sua-carteira-admin-aqui
+FEE_PERCENTAGE=10
+MIN_WITHDRAWAL_AMOUNT=0.1
+
+# Trading Configuration
+DEFAULT_SLIPPAGE=5
+MAX_POSITION_SIZE=10
+MIN_POSITION_SIZE=0.01
+```
+
+### 4. Inicie o MongoDB
+```bash
+# Ubuntu/Debian
+sudo systemctl start mongod
+
+# macOS com Homebrew
+brew services start mongodb-community
+```
+
+### 5. Execute o projeto
+
+#### Desenvolvimento (Frontend + Backend)
+```bash
+npm run dev:full
+```
+
+#### Apenas Frontend
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+#### Apenas Backend
+```bash
+npm run server:dev
+```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📁 Estrutura do Projeto
 
-**Use GitHub Codespaces**
+```
+├── src/                          # Frontend React
+│   ├── components/              # Componentes React
+│   │   ├── auth/               # Autenticação
+│   │   ├── dashboard/          # Dashboard e painéis
+│   │   └── ui/                 # Componentes base
+│   ├── contexts/               # Contextos React
+│   ├── hooks/                  # Custom hooks
+│   ├── lib/                    # Utilitários e API client
+│   └── App.tsx                 # App principal
+├── server/                       # Backend Node.js
+│   ├── src/
+│   │   ├── config/             # Configurações (DB, Solana)
+│   │   ├── controllers/        # Controladores da API
+│   │   ├── middleware/         # Middlewares
+│   │   ├── models/             # Modelos MongoDB
+│   │   ├── routes/             # Rotas da API
+│   │   ├── services/           # Serviços (Wallet, PumpFun, Bot)
+│   │   └── app.ts              # App Express
+│   ├── package.json
+│   └── tsconfig.json
+└── package.json                  # Configuração principal
+```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🎮 Como Usar
 
-## What technologies are used for this project?
+### 1. Criar Conta
+- Acesse `/auth` e crie uma conta
+- Uma carteira Solana será gerada automaticamente
+- Faça login com suas credenciais
 
-This project is built with:
+### 2. Configurar o Bot
+- Vá para a seção "Spinner Bot"
+- Configure:
+  - Valor de investimento por trade
+  - Stop loss (%)
+  - Take profit (%)
+  - Slippage tolerado
+  - Máximo de trades simultâneos
+  - Nível de risco (baixo/médio/alto)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### 3. Fazer Depósito
+- Acesse "Carteira" para ver seu endereço Solana
+- Transfira SOL para sua carteira do bot
+- O saldo será atualizado automaticamente
 
-## How can I deploy this project?
+### 4. Iniciar Trading
+- Com saldo suficiente, clique em "Iniciar Bot"
+- O bot irá:
+  - Monitorar tokens do PumpFun
+  - Analisar oportunidades
+  - Executar trades automaticamente
+  - Aplicar stop loss/take profit
 
-Simply open [Lovable](https://lovable.dev/projects/46a44d9f-dbe5-4336-97b1-220b25bcf9f5) and click on Share -> Publish.
+### 5. Sacar Fundos
+- Na seção "Carteira", clique em "Sacar"
+- Insira o endereço de destino e valor
+- Uma taxa de 10% será aplicada automaticamente
 
-## Can I connect a custom domain to my Lovable project?
+## 🔧 API Endpoints
 
-Yes, you can!
+### Autenticação
+- `POST /api/auth/register` - Criar conta
+- `POST /api/auth/login` - Login
+- `GET /api/auth/profile` - Perfil do usuário
+- `PUT /api/auth/profile` - Atualizar perfil
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+### Carteira
+- `GET /api/wallet/balance` - Saldo da carteira
+- `POST /api/wallet/withdraw` - Sacar SOL
+- `GET /api/wallet/transactions` - Histórico de transações
+- `GET /api/wallet/deposit-address` - Endereço para depósito
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Bot
+- `GET /api/bot/config` - Configurações do bot
+- `PUT /api/bot/config` - Atualizar configurações
+- `POST /api/bot/start` - Iniciar bot
+- `POST /api/bot/stop` - Parar bot
+- `GET /api/bot/stats` - Estatísticas
+- `GET /api/bot/tokens/recommended` - Tokens recomendados
+
+## 🔒 Segurança
+
+- **Chaves Privadas**: Criptografadas com AES-256-CBC
+- **Autenticação**: JWT com expiração de 7 dias
+- **Senhas**: Hash com bcrypt (12 rounds)
+- **Validação**: Todas as entradas são validadas
+- **Rate Limiting**: Proteção contra ataques
+- **CORS**: Configurado para frontend específico
+
+## 🤖 Funcionamento do Bot
+
+### Análise de Tokens
+O bot analisa tokens baseado em:
+- Market cap
+- Liquidez disponível
+- Volume de negociação
+- Idade do token
+- Informações do projeto (descrição, links sociais)
+- Histórico do criador
+
+### Sistema de Pontuação
+Cada token recebe uma pontuação de 0-100 baseada em:
+- **Liquidez** (30 pontos): >10k SOL = 30pts
+- **Market Cap** (25 pontos): >100k = 25pts
+- **Informações** (20 pontos): Descrição, links sociais
+- **Idade** (10 pontos): Tokens muito novos são penalizados
+- **Outros fatores** (15 pontos): Diversos critérios
+
+### Execução de Trades
+- Compra quando confiança > limite do nível de risco
+- Venda baseada em stop loss/take profit
+- Máximo de trades simultâneos respeitado
+- Slippage configurável
+
+## 📊 Monitoramento
+
+### Logs do Sistema
+- Conexão com MongoDB
+- Monitoramento de tokens PumpFun
+- Execução de trades
+- Erros e exceções
+
+### Métricas Disponíveis
+- Total de trades
+- Taxa de sucesso
+- Profit/Loss total
+- Saldo da carteira
+- Status do bot
+
+## 🛡️ Considerações de Produção
+
+### Para usar em produção:
+1. Altere `SOLANA_NETWORK` para `mainnet-beta`
+2. Configure RPC endpoint confiável
+3. Use MongoDB Atlas ou instância dedicada
+4. Configure HTTPS/SSL
+5. Implemente rate limiting
+6. Configure backups automáticos
+7. Monitore logs e métricas
+8. Use secrets manager para variáveis sensíveis
+
+## 🤝 Contribuição
+
+1. Fork o projeto
+2. Crie uma branch para sua feature
+3. Commit suas mudanças
+4. Push para a branch
+5. Abra um Pull Request
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para detalhes.
+
+## ⚠️ Avisos Importantes
+
+- **Risco Financeiro**: Trading de criptomoedas envolve riscos
+- **Testnet**: Use testnet para testes antes da produção
+- **Segurança**: Mantenha chaves privadas seguras
+- **Compliance**: Verifique regulamentações locais
+- **Backups**: Faça backups regulares do banco de dados
+
+## 🚀 Roadmap
+
+- [ ] Integração com DEX (Raydium, Jupiter)
+- [ ] Sistema de notificações (Discord, Telegram)
+- [ ] Dashboard administrativo avançado
+- [ ] API webhooks para eventos
+- [ ] Trading de múltiplos tokens simultâneos
+- [ ] Estratégias customizáveis
+- [ ] Backtesting de estratégias
+- [ ] Mobile app (React Native)
+
+---
+
+**Desenvolvido com ❤️ para a comunidade Solana**
