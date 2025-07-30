@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { 
-  Bot, 
-  Wallet, 
-  TrendingUp, 
-  Settings, 
-  BarChart3, 
+import {
+  Bot,
+  Wallet,
+  TrendingUp,
+  Settings,
+  BarChart3,
   LogOut,
   User,
   Coins,
@@ -22,6 +23,8 @@ import { WalletCard } from './WalletCard';
 import { TradingPanel } from './TradingPanel';
 import { TransactionsHistory } from './TransactionsHistory';
 import { AdminPanel } from './AdminPanel';
+import LanguageSelector from '../LanguageSelector';
+import SpinTokenInfo from '../SpinTokenInfo';
 
 interface NavItem {
   title: string;
@@ -30,48 +33,49 @@ interface NavItem {
   description: string;
 }
 
-const navItems: NavItem[] = [
-  {
-    title: 'Overview',
-    href: '/dashboard',
-    icon: BarChart3,
-    description: 'Visão geral da conta'
-  },
-  {
-    title: 'Spinner Bot',
-    href: '/dashboard/bot',
-    icon: Bot,
-    description: 'Configurar e controlar bot'
-  },
-  {
-    title: 'Carteira',
-    href: '/dashboard/wallet',
-    icon: Wallet,
-    description: 'Gerenciar carteira SOL'
-  },
-  {
-    title: 'Tokens',
-    href: '/dashboard/tokens',
-    icon: Coins,
-    description: 'Tokens recomendados'
-  },
-  {
-    title: 'Transações',
-    href: '/dashboard/transactions',
-    icon: Activity,
-    description: 'Histórico de transações'
-  },
-  {
-    title: 'Configurações',
-    href: '/dashboard/settings',
-    icon: Settings,
-    description: 'Configurações da conta'
-  }
-];
-
 function Sidebar() {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const location = useLocation();
+
+  const navItems: NavItem[] = [
+    {
+      title: t('nav.overview'),
+      href: '/dashboard',
+      icon: BarChart3,
+      description: t('dashboard.quickStart')
+    },
+    {
+      title: t('nav.bot'),
+      href: '/dashboard/bot',
+      icon: Bot,
+      description: t('bot.configure')
+    },
+    {
+      title: t('nav.wallet'),
+      href: '/dashboard/wallet',
+      icon: Wallet,
+      description: t('wallet.balance')
+    },
+    {
+      title: t('nav.tokens'),
+      href: '/dashboard/tokens',
+      icon: Coins,
+      description: t('tokens.recommended')
+    },
+    {
+      title: t('nav.transactions'),
+      href: '/dashboard/transactions',
+      icon: Activity,
+      description: t('transactions.history')
+    },
+    {
+      title: t('nav.settings'),
+      href: '/dashboard/settings',
+      icon: Settings,
+      description: t('settings.profile')
+    }
+  ];
 
   const handleNavigate = (path: string) => {
     window.history.pushState(null, '', path);
@@ -87,22 +91,25 @@ function Sidebar() {
             <Zap className="w-6 h-6 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-xl font-bold">Spinner Bot</h1>
-            <p className="text-sm text-muted-foreground">Solana Trading</p>
+            <h1 className="text-xl font-bold">{t('app.title')}</h1>
+            <p className="text-sm text-muted-foreground">{t('app.subtitle')}</p>
           </div>
         </div>
       </div>
 
       {/* User Info */}
       <div className="p-4 border-b border-border">
-        <div className="flex items-center space-x-3">
-          <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-full">
-            <User className="w-4 h-4 text-primary" />
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-center w-8 h-8 bg-primary/10 rounded-full">
+              <User className="w-4 h-4 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{user?.username}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{user?.username}</p>
-            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-          </div>
+          <LanguageSelector variant="minimal" size="sm" showName={false} />
         </div>
       </div>
 
@@ -111,17 +118,17 @@ function Sidebar() {
         <div className="space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.href || 
+            const isActive = location.pathname === item.href ||
               (item.href !== '/dashboard' && location.pathname.startsWith(item.href));
-            
+
             return (
               <button
                 key={item.href}
                 onClick={() => handleNavigate(item.href)}
                 className={cn(
                   "w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors",
-                  isActive 
-                    ? "bg-primary text-primary-foreground" 
+                  isActive
+                    ? "bg-primary text-primary-foreground"
                     : "hover:bg-accent text-muted-foreground hover:text-foreground"
                 )}
               >
@@ -136,16 +143,21 @@ function Sidebar() {
         </div>
       </nav>
 
+      {/* SPIN Token Widget */}
+      <div className="p-4 border-t border-border">
+        <SpinTokenInfo variant="widget" className="mb-4" />
+      </div>
+
       {/* Footer */}
       <div className="p-4 border-t border-border">
-        <Button 
-          variant="ghost" 
-          size="sm" 
+        <Button
+          variant="ghost"
+          size="sm"
           className="w-full justify-start text-muted-foreground hover:text-foreground"
           onClick={logout}
         >
           <LogOut className="w-4 h-4 mr-2" />
-          Sair
+          {t('nav.logout')}
         </Button>
       </div>
     </div>
@@ -154,61 +166,62 @@ function Sidebar() {
 
 function DashboardOverview() {
   const { user } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+        <h1 className="text-3xl font-bold">{t('nav.overview')}</h1>
         <p className="text-muted-foreground">
-          Bem-vindo de volta, {user?.username}!
+          {t('dashboard.welcome', { username: user?.username })}
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Saldo Total</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalBalance')}</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{user?.solBalance?.toFixed(4) || '0.0000'} SOL</div>
             <p className="text-xs text-muted-foreground">
-              Carteira principal
+              {t('dashboard.mainWallet')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Bot Status</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.botStatus')}</CardTitle>
             <Bot className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              <Badge variant="secondary">Inativo</Badge>
+              <Badge variant="secondary">{t('dashboard.inactive')}</Badge>
             </div>
             <p className="text-xs text-muted-foreground">
-              Clique em "Spinner Bot" para configurar
+              {t('dashboard.configureBot')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Trades Hoje</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.todayTrades')}</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              Nenhum trade executado
+              {t('dashboard.noTrades')}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Carteira</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('nav.wallet')}</CardTitle>
             <Wallet className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -216,7 +229,7 @@ function DashboardOverview() {
               {user?.walletAddress?.slice(0, 8)}...{user?.walletAddress?.slice(-4)}
             </div>
             <p className="text-xs text-muted-foreground">
-              Endereço Solana
+              {t('dashboard.solanaAddress')}
             </p>
           </CardContent>
         </Card>
@@ -225,28 +238,28 @@ function DashboardOverview() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Início Rápido</CardTitle>
+            <CardTitle>{t('dashboard.quickStart')}</CardTitle>
             <CardDescription>
-              Configure seu bot em poucos passos
+              {t('quickStart.title')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <h4 className="text-sm font-medium">1. Configure o Bot</h4>
+              <h4 className="text-sm font-medium">{t('quickStart.step1')}</h4>
               <p className="text-sm text-muted-foreground">
-                Defina valor de investimento, stop loss e take profit
+                {t('quickStart.step1Desc')}
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="text-sm font-medium">2. Faça um Depósito</h4>
+              <h4 className="text-sm font-medium">{t('quickStart.step2')}</h4>
               <p className="text-sm text-muted-foreground">
-                Transfira SOL para sua carteira do bot
+                {t('quickStart.step2Desc')}
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="text-sm font-medium">3. Inicie o Trading</h4>
+              <h4 className="text-sm font-medium">{t('quickStart.step3')}</h4>
               <p className="text-sm text-muted-foreground">
-                Ative o bot e comece a operar automaticamente
+                {t('quickStart.step3Desc')}
               </p>
             </div>
           </CardContent>
@@ -254,9 +267,9 @@ function DashboardOverview() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Recursos</CardTitle>
+            <CardTitle>{t('dashboard.features')}</CardTitle>
             <CardDescription>
-              Funcionalidades principais do sistema
+              {t('features.title')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -264,28 +277,31 @@ function DashboardOverview() {
               <div className="flex items-center space-x-3">
                 <Bot className="w-5 h-5 text-primary" />
                 <div>
-                  <p className="text-sm font-medium">Trading Automatizado</p>
-                  <p className="text-xs text-muted-foreground">Bot inteligente para tokens PumpFun</p>
+                  <p className="text-sm font-medium">{t('features.autoTrading')}</p>
+                  <p className="text-xs text-muted-foreground">{t('features.autoTradingDesc')}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <Wallet className="w-5 h-5 text-primary" />
                 <div>
-                  <p className="text-sm font-medium">Carteira Integrada</p>
-                  <p className="text-xs text-muted-foreground">Carteira SOL exclusiva com taxa de 10%</p>
+                  <p className="text-sm font-medium">{t('features.integratedWallet')}</p>
+                  <p className="text-xs text-muted-foreground">{t('features.integratedWalletDesc')}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
                 <TrendingUp className="w-5 h-5 text-primary" />
                 <div>
-                  <p className="text-sm font-medium">Análise Inteligente</p>
-                  <p className="text-xs text-muted-foreground">Algoritmos avançados de detecção</p>
+                  <p className="text-sm font-medium">{t('features.smartAnalysis')}</p>
+                  <p className="text-xs text-muted-foreground">{t('features.smartAnalysisDesc')}</p>
                 </div>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Token SPIN Section */}
+      <SpinTokenInfo variant="compact" />
     </div>
   );
 }
@@ -296,13 +312,14 @@ export const Dashboard = () => {
   return (
     <div className="flex h-screen bg-background">
       <Sidebar />
-      
+
       <main className="flex-1 overflow-auto">
         <div className="p-6">
           <Routes>
             <Route path="/" element={<DashboardOverview />} />
             <Route path="/bot" element={<TradingPanel />} />
             <Route path="/wallet" element={<WalletCard user={user} />} />
+            <Route path="/tokens" element={<SpinTokenInfo variant="full" />} />
             <Route path="/transactions" element={<TransactionsHistory />} />
             <Route path="/settings" element={<AdminPanel />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

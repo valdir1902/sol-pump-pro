@@ -1,0 +1,181 @@
+{
+  "app": {
+    "title": "Spinner Bot",
+    "subtitle": "Bot de Trading Solana",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação"
+  },
+  "nav": {
+    "overview": "Visão Geral",
+    "bot": "Spinner Bot",
+    "wallet": "Carteira",
+    "tokens": "Tokens",
+    "transactions": "Transações",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+  "auth": {
+    "login": "Entrar",
+    "register": "Registrar",
+    "email": "Email",
+    "password": "Senha",
+    "username": "Nome de usuário",
+    "confirmPassword": "Confirmar Senha",
+    "forgotPassword": "Esqueceu a senha?",
+    "noAccount": "Não tem uma conta?",
+    "hasAccount": "Já tem uma conta?",
+    "loginSuccess": "Login realizado com sucesso!",
+    "registerSuccess": "Conta criada com sucesso!",
+    "welcomeBack": "Bem-vindo de volta ao Spinner Bot",
+    "createAccount": "Crie sua conta"
+  },
+  "dashboard": {
+    "welcome": "Bem-vindo de volta, {{username}}!",
+    "totalBalance": "Saldo Total",
+    "botStatus": "Status do Bot",
+    "todayTrades": "Trades de Hoje",
+    "walletAddress": "Endereço da Carteira",
+    "quickStart": "Início Rápido",
+    "features": "Recursos",
+    "mainWallet": "Carteira principal",
+    "inactive": "Inativo",
+    "configureBot": "Clique em \"Spinner Bot\" para configurar",
+    "noTrades": "Nenhum trade executado",
+    "solanaAddress": "Endereço Solana"
+  },
+  "bot": {
+    "configure": "Configurar Bot",
+    "start": "Iniciar Bot",
+    "stop": "Parar Bot",
+    "status": "Status do Bot",
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "investmentAmount": "Valor de Investimento (SOL)",
+    "stopLoss": "Stop Loss (%)",
+    "takeProfit": "Take Profit (%)",
+    "slippage": "Slippage (%)",
+    "maxTrades": "Máx. Trades por Dia",
+    "riskLevel": "Nível de Risco",
+    "autoReinvest": "Reinvestir Automaticamente",
+    "riskLow": "Baixo",
+    "riskMedium": "Médio",
+    "riskHigh": "Alto"
+  },
+  "wallet": {
+    "balance": "Saldo",
+    "deposit": "Depositar",
+    "withdraw": "Sacar",
+    "address": "Endereço da Carteira",
+    "depositAddress": "Endereço para Depósito",
+    "withdrawAmount": "Valor do Saque",
+    "withdrawAddress": "Endereço de Destino",
+    "fee": "Taxa ({{fee}}%)",
+    "youReceive": "Você receberá",
+    "minAmount": "Mínimo: {{amount}} SOL"
+  },
+  "tokens": {
+    "recommended": "Tokens Recomendados",
+    "new": "Novos Tokens",
+    "hot": "Tokens em Alta",
+    "marketCap": "Market Cap",
+    "price": "Preço",
+    "volume": "Volume 24h",
+    "liquidity": "Liquidez",
+    "score": "Pontuação"
+  },
+  "transactions": {
+    "history": "Histórico de Transações",
+    "type": "Tipo",
+    "amount": "Valor",
+    "status": "Status",
+    "date": "Data",
+    "signature": "Assinatura",
+    "deposit": "Depósito",
+    "withdrawal": "Saque",
+    "trade": "Trade",
+    "fee": "Taxa",
+    "pending": "Pendente",
+    "confirmed": "Confirmado",
+    "failed": "Falhou"
+  },
+  "settings": {
+    "profile": "Perfil",
+    "language": "Idioma",
+    "notifications": "Notificações",
+    "security": "Segurança",
+    "api": "Configurações da API",
+    "admin": "Painel Admin",
+    "save": "Salvar",
+    "cancel": "Cancelar"
+  },
+  "quickStart": {
+    "title": "Configure seu bot em poucos passos",
+    "step1": "1. Configure o Bot",
+    "step1Desc": "Defina valor de investimento, stop loss e take profit",
+    "step2": "2. Faça um Depósito",
+    "step2Desc": "Transfira SOL para sua carteira do bot",
+    "step3": "3. Inicie o Trading",
+    "step3Desc": "Ative o bot e comece a operar automaticamente"
+  },
+  "features": {
+    "title": "Funcionalidades principais do sistema",
+    "autoTrading": "Trading Automatizado",
+    "autoTradingDesc": "Bot inteligente para tokens PumpFun",
+    "integratedWallet": "Carteira Integrada",
+    "integratedWalletDesc": "Carteira SOL exclusiva com taxa de 10%",
+    "smartAnalysis": "Análise Inteligente",
+    "smartAnalysisDesc": "Algoritmos avançados de detecção"
+  },
+  "form": {
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "Formato de email inválido",
+    "passwordTooShort": "A senha deve ter pelo menos 6 caracteres",
+    "passwordsDontMatch": "As senhas não coincidem",
+    "invalidAmount": "Valor inválido",
+    "submit": "Enviar",
+    "reset": "Limpar"
+  },
+  "button": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "view": "Visualizar",
+    "copy": "Copiar",
+    "close": "Fechar",
+    "confirm": "Confirmar"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "connecting": "Conectando",
+    "connected": "Conectado",
+    "disconnected": "Desconectado"
+  },
+  "error": {
+    "networkError": "Erro de rede. Tente novamente.",
+    "serverError": "Erro do servidor. Tente novamente mais tarde.",
+    "unauthorized": "Acesso não autorizado.",
+    "invalidCredentials": "Credenciais inválidas.",
+    "userExists": "Usuário já existe.",
+    "insufficientBalance": "Saldo insuficiente.",
+    "invalidAddress": "Endereço Solana inválido.",
+    "transactionFailed": "Transação falhou."
+  },
+  "token": {
+    "serverCosts": "Token de Custos do Servidor",
+    "description": "Ajude-nos a manter os servidores e melhorar o bot",
+    "symbol": "SPIN",
+    "totalSupply": "Supply Total",
+    "holders": "Holders",
+    "buy": "Comprar Token SPIN",
+    "benefits": "Benefícios",
+    "benefit1": "Taxas de trading reduzidas",
+    "benefit2": "Suporte prioritário",
+    "benefit3": "Funcionalidades avançadas",
+    "benefit4": "Compartilhamento de custos do servidor"
+  }
+}

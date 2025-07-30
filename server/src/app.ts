@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { connectDatabase } from './config/database';
 import { PumpFunService } from './services/PumpFunService';
+import { i18nMiddleware } from './config/i18n';
 
 // Importar rotas
 import authRoutes from './routes/auth';
@@ -17,90 +18,118 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middlewares de segurança
-app.use(helmet());
+app.use(helmet({
+  crossOriginEmbedderPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+}));
+
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true,
+  optionsSuccessStatus: 200
 }));
 
-// Middlewares
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
+// Middleware de internacionalização
+app.use(i18nMiddleware);
 
-// Log de requisições em desenvolvimento
+// Middleware para parsing JSON
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Middleware de logging (desenvolvimento)
 if (process.env.NODE_ENV === 'development') {
   app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path} - Lang: ${req.language || 'default'}`);
     next();
   });
 }
 
-// Rotas da API
-app.use('/api/auth', authRoutes);
-app.use('/api/wallet', walletRoutes);
-app.use('/api/bot', botRoutes);
-
-// Rota de health check
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'ok',
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
     timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    version: '1.0.0',
+    language: req.language || 'pt',
+    message: req.t ? req.t('api.success') : 'Server is running'
   });
 });
 
-// Rota para informações da API
+// API info endpoint
 app.get('/api', (req, res) => {
   res.json({
     name: 'Solana Spinner Bot API',
     version: '1.0.0',
-    description: 'API para bot de trading automatizado de tokens Solana/PumpFun',
+    description: req.t ? req.t('api.description', { defaultValue: 'API for Solana trading bot with PumpFun integration' }) : 'API for Solana trading bot with PumpFun integration',
+    language: req.language || 'pt',
+    supportedLanguages: ['en', 'pt', 'es', 'fr', 'de', 'it', 'ja', 'ko', 'zh', 'ru', 'ar', 'hi', 'tr', 'nl', 'sv'],
     endpoints: {
       auth: '/api/auth',
       wallet: '/api/wallet',
       bot: '/api/bot',
-      health: '/api/health',
+      health: '/health'
     },
+    timestamp: new Date().toISOString()
   });
 });
 
-// Middleware de tratamento de erros
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Erro não tratado:', err);
+// Registrar rotas da API
+app.use('/api/auth', authRoutes);
+app.use('/api/wallet', walletRoutes);
+app.use('/api/bot', botRoutes);
+
+// Middleware de erro global com suporte a i18n
+app.use((err: any, req: any, res: any, next: any) => {
+  console.error('Erro global:', err);
   
-  res.status(err.status || 500).json({
-    error: process.env.NODE_ENV === 'production' 
-      ? 'Erro interno do servidor' 
-      : err.message,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  const errorMessage = req.t ? req.t('api.serverError') : 'Internal server error';
+  const language = req.language || 'pt';
+  
+  res.status(500).json({
+    error: errorMessage,
+    language,
+    timestamp: new Date().toISOString(),
+    ...(process.env.NODE_ENV === 'development' && { details: err.message })
   });
 });
 
-// Middleware para rotas não encontradas
-app.use('*', (req, res) => {
+// 404 handler com suporte a i18n
+app.use((req, res) => {
+  const notFoundMessage = req.t ? req.t('api.notFound') : 'Endpoint not found';
+  const language = req.language || 'pt';
+  
   res.status(404).json({
-    error: 'Rota não encontrada',
-    path: req.originalUrl,
+    error: notFoundMessage,
+    path: req.path,
+    method: req.method,
+    language,
+    timestamp: new Date().toISOString()
   });
 });
 
-// Função para inicializar o servidor
+// Função para iniciar o servidor
 const startServer = async (): Promise<void> => {
   try {
     // Conectar ao banco de dados
     await connectDatabase();
     
-    // Iniciar monitoramento de tokens do PumpFun
+    // Iniciar monitoramento de tokens PumpFun
     PumpFunService.startTokenMonitoring((newTokens) => {
       console.log(`📈 ${newTokens.length} novos tokens detectados no PumpFun`);
     });
-    
+
     // Iniciar servidor
     app.listen(PORT, () => {
       console.log(`🚀 Servidor rodando na porta ${PORT}`);
       console.log(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`📊 API disponível em: http://localhost:${PORT}/api`);
+      console.log(`🌍 Idiomas suportados: pt, en, es, fr, de, it, ja, ko, zh, ru, ar, hi, tr, nl, sv`);
     });
   } catch (error) {
     console.error('❌ Erro ao iniciar servidor:', error);
@@ -108,30 +137,24 @@ const startServer = async (): Promise<void> => {
   }
 };
 
-// Tratamento de sinais de encerramento
+// Tratamento de sinais de processo
 process.on('SIGTERM', () => {
-  console.log('🛑 Recebido SIGTERM, encerrando servidor...');
+  console.log('📴 SIGTERM recebido, fechando servidor...');
   process.exit(0);
 });
 
 process.on('SIGINT', () => {
-  console.log('🛑 Recebido SIGINT, encerrando servidor...');
+  console.log('📴 SIGINT recebido, fechando servidor...');
   process.exit(0);
 });
 
-// Tratamento de erros não capturados
 process.on('unhandledRejection', (reason, promise) => {
-  console.error('🚨 Unhandled Rejection at:', promise, 'reason:', reason);
+  console.error('❌ Unhandled Rejection:', reason);
 });
 
 process.on('uncaughtException', (error) => {
-  console.error('🚨 Uncaught Exception thrown:', error);
+  console.error('❌ Uncaught Exception:', error);
   process.exit(1);
 });
 
 export { app, startServer };
-
-// Iniciar servidor se este arquivo for executado diretamente
-if (require.main === module) {
-  startServer();
-}
